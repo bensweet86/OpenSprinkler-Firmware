@@ -179,7 +179,7 @@ typedef unsigned long ulong;
   #define MAX_LOCATION        48    // location string
   #define MAX_JAVASCRIPTURL   48    // javascript url
   #define MAX_WEATHERURL      48    // weather script url
-  #define MAX_WEATHER_KEY     24    // weather api key
+  #define MAX_WEATHER_KEY     32    // weather api key
 
 #endif  // end of NVM defines
 
@@ -191,7 +191,8 @@ typedef unsigned long ulong;
 #define ADDR_NVM_JAVASCRIPTURL (ADDR_NVM_LOCATION+MAX_LOCATION)
 #define ADDR_NVM_WEATHERURL    (ADDR_NVM_JAVASCRIPTURL+MAX_JAVASCRIPTURL)
 #define ADDR_NVM_WEATHER_KEY   (ADDR_NVM_WEATHERURL+MAX_WEATHERURL)
-#define ADDR_NVM_STN_NAMES     (ADDR_NVM_WEATHER_KEY+MAX_WEATHER_KEY)
+#define ADDR_NVM_DSWEATHER_KEY (ADDR_NVM_WEATHER_KEY+MAX_WEATHERURL)
+#define ADDR_NVM_STN_NAMES     (ADDR_NVM_DSWEATHER_KEY+MAX_WEATHER_KEY)
 #define ADDR_NVM_MAS_OP        (ADDR_NVM_STN_NAMES+MAX_NUM_STATIONS*STATION_NAME_SIZE) // master op bits
 #define ADDR_NVM_IGNRAIN       (ADDR_NVM_MAS_OP+(MAX_EXT_BOARDS+1))  // ignore rain bits
 #define ADDR_NVM_MAS_OP_2      (ADDR_NVM_IGNRAIN+(MAX_EXT_BOARDS+1)) // master2 op bits

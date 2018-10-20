@@ -1386,7 +1386,7 @@ void server_change_scripturl() {
 
 /**
  * Change options
- * Command: /co?pw=xxx&o?=x&loc=x&wtkey=x&ttt=x
+ * Command: /co?pw=xxx&o?=x&loc=x&wtkey=x&dskey=x&ttt=x
  *
  * pw:  password
  * o?:  option name (? is option index)
@@ -1479,135 +1479,6 @@ void server_change_options()
     nvm_write_block(tmp_buffer, (void*)ADDR_NVM_WEATHER_KEY, strlen(tmp_buffer)+1);
   }
   keyfound = 0;
-  if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("ifkey"), true, &keyfound)) {
-    urlDecode(tmp_buffer);
-    tmp_buffer[TMP_BUFFER_SIZE-1]=0;
-    write_to_file(ifkey_filename, tmp_buffer, strlen(tmp_buffer));
-  } else if (keyfound) {
-    tmp_buffer[0]=0;
-    write_to_file(ifkey_filename, tmp_buffer, strlen(tmp_buffer));
-  }  
-  // if not using NTP and manually setting time
-  if (!os.options[OPTION_USE_NTP] && findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("ttt"), true)) {
-    unsigned long t;
-    t = atol(tmp_buffer);
-    // before chaging time, reset all stations to avoid messing up with timing
-    reset_all_stations_immediate();
-#if defined(ARDUINO)
-    setTime(t);
-    RTC.set(t);
-#endif
-  }
-  if(findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("wto"), true)) {
-    urlDecode(tmp_buffer);
-    tmp_buffer[TMP_BUFFER_SIZE-1]=0;
-    // store weather key
-    write_to_file(wtopts_filename, tmp_buffer, strlen(tmp_buffer));
-    weather_change = true;
-  }
-  if (err)  handle_return(HTML_DATA_OUTOFBOUND);
-
-  os.options_save();
-
-  if(time_change) {
-    os.status.req_ntpsync = 1;
-  }
-
-  if(weather_change) {
-    os.checkwt_lasttime = 0;  // force weather update
-  }
-
-  if(network_change) {
-    // network related options have changed
-    // this would require a restart to take effect
-  }
-
-  handle_return(HTML_SUCCESS);
-}
-
-/**
- * Change options
- * Command: /co?pw=xxx&o?=x&loc=x&dskey=x&ttt=x
- *
- * pw:  password
- * o?:  option name (? is option index)
- * loc: location
- * dskey: dark sky api key
- * ttt: manual time (applicable only if ntp=0)
- */
-void server_change_options()
-{
-#ifdef ESP8266
-  char* p = NULL;
-  if(!process_password()) return;
-#else  
-  char* p = get_buffer;
-#endif
-
-  // temporarily save some old options values
-	bool time_change = false;
-	bool weather_change = false;
-	bool network_change = false;
-
-  // !!! p and bfill share the same buffer, so don't write
-  // to bfill before you are done analyzing the buffer !!!
-  // process option values
-  byte err = 0;
-  byte prev_value;
-  byte max_value;
-  for (byte oid=0; oid<NUM_OPTIONS; oid++) {
-
-    // skip options that cannot be set through /co command
-    if (oid==OPTION_RESET || oid==OPTION_DEVICE_ENABLE ||
-        oid==OPTION_FW_VERSION || oid==OPTION_HW_VERSION ||
-        oid==OPTION_FW_MINOR || oid==OPTION_SEQUENTIAL_RETIRED ||
-        oid==OPTION_REMOTE_EXT_MODE)
-      continue;
-    prev_value = os.options[oid];
-    max_value = pgm_read_byte(op_max+oid);
-    if (max_value==1)  os.options[oid] = 0;  // set a bool variable to 0 first
-    char tbuf2[5] = {'o', 0, 0, 0, 0};
-    itoa(oid, tbuf2+1, 10);
-    if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, tbuf2)) {
-      if (max_value==1) {
-        os.options[oid] = 1;  // if the bool variable is detected, set to 1
-      } else {
-		    int32_t v = atol(tmp_buffer);
-		    if (oid==OPTION_MASTER_OFF_ADJ || oid==OPTION_MASTER_OFF_ADJ_2 ||
-		        oid==OPTION_MASTER_ON_ADJ  || oid==OPTION_MASTER_ON_ADJ_2  ||
-		        oid==OPTION_STATION_DELAY_TIME) {
-		      v=water_time_encode_signed(v);
-		    } // encode station delay time
-        #if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__) || defined(ESP8266)
-        if(oid==OPTION_BOOST_TIME) {
-           v>>=2;
-        }
-        #endif
-        if (v>=0 && v<=max_value) {
-          os.options[oid] = v;
-		    } else {
-		      err = 1;
-		    }
-		  }
-    }
-    if (os.options[oid] != prev_value) {	// if value has changed
-    	if (oid==OPTION_TIMEZONE || oid==OPTION_USE_NTP)    time_change = true;
-    	if (oid>=OPTION_NTP_IP1 && oid<=OPTION_NTP_IP4)     time_change = true;
-    	if (oid>=OPTION_USE_DHCP && oid<=OPTION_HTTPPORT_1) network_change = true;
-    	if (oid==OPTION_DEVICE_ID)  network_change = true;
-      if (oid==OPTION_USE_WEATHER) weather_change = true;
-    }
-  }
-
-  if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("loc"), true)) {
-    urlDecode(tmp_buffer);
-    tmp_buffer[MAX_LOCATION-1]=0;   // make sure we don't exceed the maximum size
-    if (strcmp_to_nvm(tmp_buffer, ADDR_NVM_LOCATION)) { // if location has changed
-      nvm_write_block(tmp_buffer, (void*)ADDR_NVM_LOCATION, strlen(tmp_buffer)+1);
-      weather_change = true;
-    }
-  }
-  uint8_t keyfound = 0;
   if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("dskey"), true, &keyfound)) {
     urlDecode(tmp_buffer);
     tmp_buffer[MAX_WEATHER_KEY-1]=0;
@@ -1665,6 +1536,7 @@ void server_change_options()
 
   handle_return(HTML_SUCCESS);
 }
+
 /**
  * Change password
  * Command: /sp?pw=xxx&npw=x&cpw=x

@@ -1679,6 +1679,7 @@ void OpenSprinkler::options_setup() {
     nvm_write_block(DEFAULT_JAVASCRIPT_URL, (void*)ADDR_NVM_JAVASCRIPTURL, strlen(DEFAULT_JAVASCRIPT_URL)+1);
     nvm_write_block(DEFAULT_WEATHER_URL, (void*)ADDR_NVM_WEATHERURL, strlen(DEFAULT_WEATHER_URL)+1);
     nvm_write_block(DEFAULT_WEATHER_KEY, (void*)ADDR_NVM_WEATHER_KEY, strlen(DEFAULT_WEATHER_KEY)+1);
+	nvm_write_block(DEFAULT_WEATHER_KEY, (void*)ADDR_NVM_DSWEATHER_KEY, strlen(DEFAULT_WEATHER_KEY)+1);
 
     // 3. reset station names and special attributes, default Sxx
     tmp_buffer[0]='S';
