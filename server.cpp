@@ -1481,7 +1481,7 @@ void server_change_options()
   keyfound = 0;
   if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("dskey"), true, &keyfound)) {
     urlDecode(tmp_buffer);
-    tmp_buffer[MAX_WEATHER_KEY-1]=0;
+    tmp_buffer[MAX_DSWEATHER_KEY-1]=0;
     if (strcmp_to_nvm(tmp_buffer, ADDR_NVM_DSWEATHER_KEY)) {  // if weather key has changed
       nvm_write_block(tmp_buffer, (void*)ADDR_NVM_DSWEATHER_KEY, strlen(tmp_buffer)+1);
       weather_change = true;

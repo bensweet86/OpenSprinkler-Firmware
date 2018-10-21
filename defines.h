@@ -104,21 +104,21 @@ typedef unsigned long ulong;
 #if defined(ARDUINO) && !defined(ESP8266)
 
 /** 2KB NVM (ATmega644) data structure:
-  * |         |     |  ---STRING PARAMETERS---      |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (986)  |(12) |(36) |(48) | (40) | (40) |(24) |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
-  * |         |     |     |     |      |      |     |           |     |     |      |     |     |     |          |
-  * 0        986  998   1034  1082  1122   1162   1186        1954  1960  1966   1972  1978  1984  1990      2048
+  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (956)  |(12) |(36) |(48) | (40) | (40) |(20) | (34)  |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
+  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
+  * 0        956  968   1004  1052  1092   1132    1152    1186        1954  1960  1966   1972  1978  1984  1990      2048
   */
 
 /** 4KB NVM (ATmega1284) data structure:
-  * |         |     |  ---STRING PARAMETERS---      |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (2433) |(12) |(36) |(48) | (48) | (48) |(24) |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
-  * |         |     |     |     |      |      |     |           |     |     |      |     |     |     |          |
-  * 0       2433  2445   2481  2529  2577   2625   2649        3993  4000  4007   4014  4021  4028  4035      4096
+  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (2403) |(12) |(36) |(48) | (48) | (48) |(20) | (34)  |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
+  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
+  * 0       2403  2415   2451  2499  2547   2595   2615    2649        3993  4000  4007   4014  4021  4028  4035      4096
   */
-
+  
   #if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__) // for 4KB NVM
 
     #define MAX_EXT_BOARDS    6  // maximum number of exp. boards (each expands 8 stations)
@@ -127,13 +127,14 @@ typedef unsigned long ulong;
     #define NVM_SIZE            4096  // For AVR, nvm data is stored in EEPROM, ATmega1284 has 4K EEPROM
     #define STATION_NAME_SIZE   24    // maximum number of characters in each station name
 
-    #define MAX_PROGRAMDATA     2433  // program data
+    #define MAX_PROGRAMDATA     2403  // program data
     #define MAX_NVCONDATA       12    // non-volatile controller data
     #define MAX_USER_PASSWORD   36    // user password
     #define MAX_LOCATION        48    // location string
     #define MAX_JAVASCRIPTURL   48    // javascript url
     #define MAX_WEATHERURL      48    // weather script url
-    #define MAX_WEATHER_KEY     32    // weather api key
+    #define MAX_WEATHER_KEY     20    // weather api key
+	#define MAX_DSWEATHER_KEY   34    // dark sky api key
 
   #else
 
@@ -143,24 +144,25 @@ typedef unsigned long ulong;
     #define NVM_SIZE            2048  // For AVR, nvm data is stored in EEPROM, ATmega644 has 2K EEPROM
     #define STATION_NAME_SIZE   16    // maximum number of characters in each station name
 
-    #define MAX_PROGRAMDATA     986   // program data
+    #define MAX_PROGRAMDATA     956   // program data
     #define MAX_NVCONDATA       12     // non-volatile controller data
     #define MAX_USER_PASSWORD   36    // user password
     #define MAX_LOCATION        48    // location string
     #define MAX_JAVASCRIPTURL   40    // javascript url
-    #define MAX_WEATHERURL      40    // weather script url
-    #define MAX_WEATHER_KEY     24    // weather api key,
+    #define MAX_WEATHERURL      20    // weather script url
+    #define MAX_WEATHER_KEY     20    // weather api key
+	#define MAX_DSWEATHER_KEY   34    // dark sky api key
 
   #endif
 
 #else // NVM defines for RPI/BBB/LINUX/ESP8266
 
 /** 8KB NVM (RPI/BBB/LINUX/ESP8266) data structure:
-  * |         |     |  ---STRING PARAMETERS---      |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (6127) |(12) |(36) |(48) | (48) | (48) |(24) |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
-  * |         |     |     |     |      |      |     |           |     |     |      |     |     |     |          |
-  * 0       6127  6139   6175  6223  6271   6319   6343        8071  8080  8089   8098  8107  8116  8125      8192
+  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (6127) |(12) |(36) |(48) | (48) | (48) |(20) | (34)  |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
+  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
+  * 0       6097  6109   6145  6193  6241   6289   6309    6343        8071  8080  8089   8098  8107  8116  8125      8192
   */
 
   // These are kept the same as AVR for compatibility reasons
@@ -173,13 +175,14 @@ typedef unsigned long ulong;
   #define NVM_SIZE            8192
   #define STATION_NAME_SIZE   24    // maximum number of characters in each station name
 
-  #define MAX_PROGRAMDATA     6127  // program data
+  #define MAX_PROGRAMDATA     6097  // program data
   #define MAX_NVCONDATA       12     // non-volatile controller data
   #define MAX_USER_PASSWORD   36    // user password
   #define MAX_LOCATION        48    // location string
   #define MAX_JAVASCRIPTURL   48    // javascript url
   #define MAX_WEATHERURL      48    // weather script url
-  #define MAX_WEATHER_KEY     32    // weather api key
+  #define MAX_WEATHER_KEY     20    // weather api key
+  #define MAX_DSWEATHER_KEY   34    // dark sky api key
 
 #endif  // end of NVM defines
 
@@ -191,8 +194,8 @@ typedef unsigned long ulong;
 #define ADDR_NVM_JAVASCRIPTURL (ADDR_NVM_LOCATION+MAX_LOCATION)
 #define ADDR_NVM_WEATHERURL    (ADDR_NVM_JAVASCRIPTURL+MAX_JAVASCRIPTURL)
 #define ADDR_NVM_WEATHER_KEY   (ADDR_NVM_WEATHERURL+MAX_WEATHERURL)
-#define ADDR_NVM_DSWEATHER_KEY (ADDR_NVM_WEATHER_KEY+MAX_WEATHERURL)
-#define ADDR_NVM_STN_NAMES     (ADDR_NVM_DSWEATHER_KEY+MAX_WEATHER_KEY)
+#define ADDR_NVM_DSWEATHER_KEY (ADDR_NVM_WEATHER_KEY+MAX_WEATHERKEY)
+#define ADDR_NVM_STN_NAMES     (ADDR_NVM_DSWEATHER_KEY+MAX_DSWEATHER_KEY)
 #define ADDR_NVM_MAS_OP        (ADDR_NVM_STN_NAMES+MAX_NUM_STATIONS*STATION_NAME_SIZE) // master op bits
 #define ADDR_NVM_IGNRAIN       (ADDR_NVM_MAS_OP+(MAX_EXT_BOARDS+1))  // ignore rain bits
 #define ADDR_NVM_MAS_OP_2      (ADDR_NVM_IGNRAIN+(MAX_EXT_BOARDS+1)) // master2 op bits
