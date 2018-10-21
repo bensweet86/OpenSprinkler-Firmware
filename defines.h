@@ -179,7 +179,7 @@ typedef unsigned long ulong;
   #define MAX_LOCATION        48    // location string
   #define MAX_JAVASCRIPTURL   48    // javascript url
   #define MAX_WEATHERURL      48    // weather script url
-  #define MAX_WEATHER_KEY     32    // weather api key
+  #define MAX_WEATHER_KEY     30    // weather api key
 
 #endif  // end of NVM defines
 
