@@ -100,7 +100,7 @@ EthernetClient EthernetServer::available()
 	FD_SET(m_sock, &sock_set);
 	struct timeval timeout;
 	timeout.tv_sec = 0;
-	timeout.tv_usec = 50 * 1000; // 50ms
+	timeout.tv_usec = 1000 * 1000; // 1000ms
 
 	select(m_sock + 1, &sock_set, NULL, NULL, &timeout);
 	if (FD_ISSET(m_sock, &sock_set))
