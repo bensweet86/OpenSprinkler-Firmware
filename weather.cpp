@@ -173,11 +173,10 @@ void GetWeather() {
 #else  
   BufferFiller bf = (uint8_t*)tmp_buffer;
 #endif
-  bf.emit_p(PSTR("$D.py?loc=$E&key=$E&dskey=$E&fwv=$D&wto=$S"),
+  bf.emit_p(PSTR("$D.py?loc=$E&dskey=$E&fwv=$D&wto=$S"),
                 (in	t) os.options[OPTION_USE_WEATHER],
                 ADDR_NVM_LOCATION,
-                ADDR_NVM_WEATHER_KEY,
-				ADDR_NVM_DSWEATHER_KEY,
+				        ADDR_NVM_DSWEATHER_KEY,
                 (int)os.options[OPTION_FW_VERSION],
                 tmp);
   // copy string to tmp_buffer, replacing all spaces with _
@@ -269,11 +268,10 @@ void GetWeather() {
   BufferFiller bf = tmp_buffer;
   char tmp[100];
   read_from_file(wtopts_filename, tmp, 100);
-  bf.emit_p(PSTR("$D.py?loc=$E&key=$E&dskey=$E&fwv=$D&wto=$S"),
+  bf.emit_p(PSTR("$D.py?loc=$E&dskey=$E&fwv=$D&wto=$S"),
                 (int) os.options[OPTION_USE_WEATHER],
                 ADDR_NVM_LOCATION,
-                ADDR_NVM_WEATHER_KEY,
-				ADDR_NVM_DSWEATHER_KEY,
+				        ADDR_NVM_DSWEATHER_KEY,
                 (int)os.options[OPTION_FW_VERSION],
                 tmp);    
 

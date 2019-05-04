@@ -1158,7 +1158,7 @@ void server_json_controller_main() {
   ulong curr_time = os.now_tz();
   //os.nvm_string_get(ADDR_NVM_LOCATION, tmp_buffer);
   bfill.emit_p(PSTR("\"devt\":$L,\"nbrd\":$D,\"en\":$D,\"rd\":$D,\"rs\":$D,\"rdst\":$L,"
-                    "\"loc\":\"$E\",\"wtkey\":\"$E\",\"dskey\":\"$E\",\"sunrise\":$D,\"sunset\":$D,\"eip\":$L,\"lwc\":$L,\"lswc\":$L,"
+                    "\"loc\":\"$E\",\"dskey\":\"$E\",\"sunrise\":$D,\"sunset\":$D,\"eip\":$L,\"lwc\":$L,\"lswc\":$L,"
                     "\"lupt\":$L,\"lrun\":[$D,$D,$D,$L],"),
               curr_time,
               os.nboards,
@@ -1167,8 +1167,7 @@ void server_json_controller_main() {
               os.status.rain_sensed,
               os.nvdata.rd_stop_time,
               ADDR_NVM_LOCATION,
-              ADDR_NVM_WEATHER_KEY,
-			  ADDR_NVM_DSWEATHER_KEY,
+			        ADDR_NVM_DSWEATHER_KEY,
               os.nvdata.sunrise_time,
               os.nvdata.sunset_time,
               os.nvdata.external_ip,
@@ -1389,12 +1388,12 @@ void server_change_scripturl() {
 
 /**
  * Change options
- * Command: /co?pw=xxx&o?=x&loc=x&wtkey=x&dskey=x&ttt=x
+ * Command: /co?pw=xxx&o?=x&loc=x&dskey=x&ttt=x
  *
  * pw:  password
  * o?:  option name (? is option index)
  * loc: location
- * wtkey: weather underground api key
+ * dskey: Dark Sky api key
  * ttt: manual time (applicable only if ntp=0)
  */
 void server_change_options()
@@ -1470,18 +1469,6 @@ void server_change_options()
     }
   }
   uint8_t keyfound = 0;
-  if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("wtkey"), true, &keyfound)) {
-    urlDecode(tmp_buffer);
-    tmp_buffer[MAX_WEATHER_KEY-1]=0;
-    if (strcmp_to_nvm(tmp_buffer, ADDR_NVM_WEATHER_KEY)) {  // if weather key has changed
-      nvm_write_block(tmp_buffer, (void*)ADDR_NVM_WEATHER_KEY, strlen(tmp_buffer)+1);
-      weather_change = true;
-    }
-  } else if (keyfound) {
-    tmp_buffer[0]=0;
-    nvm_write_block(tmp_buffer, (void*)ADDR_NVM_WEATHER_KEY, strlen(tmp_buffer)+1);
-  }
-  keyfound = 0;
   if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("dskey"), true, &keyfound)) {
     urlDecode(tmp_buffer);
     tmp_buffer[MAX_DSWEATHER_KEY-1]=0;

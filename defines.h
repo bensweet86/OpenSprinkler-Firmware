@@ -104,19 +104,19 @@ typedef unsigned long ulong;
 #if defined(ARDUINO) && !defined(ESP8266)
 
 /** 2KB NVM (ATmega644) data structure:
-  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (956)  |(12) |(36) |(48) | (40) | (40) |(20) | (34)  |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
-  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
-  * 0        956  968   1004  1052  1092   1132    1152    1186        1954  1960  1966   1972  1978  1984  1990      2048
+  * |         |     |  ---STRING PARAMETERS---        |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (956)  |(12) |(36) |(48) | (40) | (40) | (34)  |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
+  * |         |     |     |     |      |      |       |           |     |     |      |     |     |     |          |
+  * 0        956  968   1004  1052  1092   1132    1166        1934  1940  1946   1952  1958  1964  1970      2028
   */
 
 /** 4KB NVM (ATmega1284) data structure:
-  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (2403) |(12) |(36) |(48) | (48) | (48) |(20) | (34)  |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
-  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
-  * 0       2403  2415   2451  2499  2547   2595   2615    2649        3993  4000  4007   4014  4021  4028  4035      4096
+  * |         |     |  ---STRING PARAMETERS---         |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL |  DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (2403) |(12) |(36) |(48) | (48) | (48) |  (34)  |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
+  * |         |     |     |     |      |      |        |           |     |     |      |     |     |     |          |
+  * 0       2403  2415   2451  2499  2547   2595    2629        3973  3080  3087   3094  4001  4008  4015      4086
   */
   
   #if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__) // for 4KB NVM
@@ -133,8 +133,7 @@ typedef unsigned long ulong;
     #define MAX_LOCATION        48    // location string
     #define MAX_JAVASCRIPTURL   48    // javascript url
     #define MAX_WEATHERURL      48    // weather script url
-    #define MAX_WEATHER_KEY     20    // weather api key
-	#define MAX_DSWEATHER_KEY   34    // dark sky api key
+	  #define MAX_DSWEATHER_KEY   34    // dark sky api key
 
   #else
 
@@ -150,19 +149,18 @@ typedef unsigned long ulong;
     #define MAX_LOCATION        48    // location string
     #define MAX_JAVASCRIPTURL   40    // javascript url
     #define MAX_WEATHERURL      20    // weather script url
-    #define MAX_WEATHER_KEY     20    // weather api key
-	#define MAX_DSWEATHER_KEY   34    // dark sky api key
+	  #define MAX_DSWEATHER_KEY   34    // dark sky api key
 
   #endif
 
 #else // NVM defines for RPI/BBB/LINUX/ESP8266
 
 /** 8KB NVM (RPI/BBB/LINUX/ESP8266) data structure:
-  * |         |     |  ---STRING PARAMETERS---              |           |   ----STATION ATTRIBUTES-----      |          |
-  * | PROGRAM | CON | PWD | LOC | JURL | WURL | KEY | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (6127) |(12) |(36) |(48) | (48) | (48) |(20) | (34)  |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
-  * |         |     |     |     |      |      |     |       |           |     |     |      |     |     |     |          |
-  * 0       6097  6109   6145  6193  6241   6289   6309    6343        8071  8080  8089   8098  8107  8116  8125      8192
+  * |         |     |  ---STRING PARAMETERS---        |           |   ----STATION ATTRIBUTES-----      |          |
+  * | PROGRAM | CON | PWD | LOC | JURL | WURL | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
+  * |  (6127) |(12) |(36) |(48) | (48) | (48) | (34)  |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
+  * |         |     |     |     |      |      |       |           |     |     |      |     |     |     |          |
+  * 0       6097  6109   6145  6193  6241   6289   6323        8051  8060  8069   8078  8087  8096  8105      8172
   */
 
   // These are kept the same as AVR for compatibility reasons
@@ -181,7 +179,6 @@ typedef unsigned long ulong;
   #define MAX_LOCATION        48    // location string
   #define MAX_JAVASCRIPTURL   48    // javascript url
   #define MAX_WEATHERURL      48    // weather script url
-  #define MAX_WEATHER_KEY     20    // weather api key
   #define MAX_DSWEATHER_KEY   34    // dark sky api key
 
 #endif  // end of NVM defines
@@ -193,8 +190,7 @@ typedef unsigned long ulong;
 #define ADDR_NVM_LOCATION      (ADDR_NVM_PASSWORD+MAX_USER_PASSWORD)
 #define ADDR_NVM_JAVASCRIPTURL (ADDR_NVM_LOCATION+MAX_LOCATION)
 #define ADDR_NVM_WEATHERURL    (ADDR_NVM_JAVASCRIPTURL+MAX_JAVASCRIPTURL)
-#define ADDR_NVM_WEATHER_KEY   (ADDR_NVM_WEATHERURL+MAX_WEATHERURL)
-#define ADDR_NVM_DSWEATHER_KEY (ADDR_NVM_WEATHER_KEY+MAX_WEATHER_KEY)
+#define ADDR_NVM_DSWEATHER_KEY (ADDR_NVM_WEATHERURL+MAX_WEATHERURL)
 #define ADDR_NVM_STN_NAMES     (ADDR_NVM_DSWEATHER_KEY+MAX_DSWEATHER_KEY)
 #define ADDR_NVM_MAS_OP        (ADDR_NVM_STN_NAMES+MAX_NUM_STATIONS*STATION_NAME_SIZE) // master op bits
 #define ADDR_NVM_IGNRAIN       (ADDR_NVM_MAS_OP+(MAX_EXT_BOARDS+1))  // ignore rain bits
@@ -204,10 +200,10 @@ typedef unsigned long ulong;
 #define ADDR_NVM_STNSPE        (ADDR_NVM_STNSEQ+(MAX_EXT_BOARDS+1)) // station special bits (i.e. non-standard stations)
 #define ADDR_NVM_OPTIONS       (ADDR_NVM_STNSPE+(MAX_EXT_BOARDS+1))  // options
 
-/** Default password, location string, weather key, script urls */
+/** Default password, location string, dark sky weather key, script urls */
 #define DEFAULT_PASSWORD          "a6d82bced638de3def1e9bbb4983225c"  // md5 of 'opendoor'
 #define DEFAULT_LOCATION          "Boston,MA"
-#define DEFAULT_WEATHER_KEY       ""
+#define DEFAULT_DSWEATHER_KEY       ""
 #define DEFAULT_JAVASCRIPT_URL    "https://ui.opensprinkler.com/js"
 #define DEFAULT_WEATHER_URL       "weather.opensprinkler.com"
 #define DEFAULT_IFTTT_URL         "maker.ifttt.com"
