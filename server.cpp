@@ -1159,7 +1159,7 @@ void server_json_controller_main() {
   //os.nvm_string_get(ADDR_NVM_LOCATION, tmp_buffer);
   bfill.emit_p(PSTR("\"devt\":$L,\"nbrd\":$D,\"en\":$D,\"rd\":$D,\"rs\":$D,\"rdst\":$L,"
                     "\"loc\":\"$E\",\"dskey\":\"$E\",\"sunrise\":$D,\"sunset\":$D,\"eip\":$L,\"lwc\":$L,\"lswc\":$L,"
-                    "\"lupt\":$L,\"lrun\":[$D,$D,$D,$L],"),
+                    "\"lupt\":$L,\"lrun\":[$D,$D,$D,$L],\"wurl\":\"$E\","),
               curr_time,
               os.nboards,
               os.status.enabled,
@@ -1177,7 +1177,8 @@ void server_json_controller_main() {
               pd.lastrun.station,
               pd.lastrun.program,
               pd.lastrun.duration,
-              pd.lastrun.endtime);
+              pd.lastrun.endtime,
+              ADDR_NVM_WEATHERURL);
 
 #if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__) || defined(ESP8266)
   if(os.status.has_curr_sense) {
