@@ -174,9 +174,9 @@ void GetWeather() {
   BufferFiller bf = (uint8_t*)tmp_buffer;
 #endif
   bf.emit_p(PSTR("$D.py?loc=$E&dskey=$E&fwv=$D&wto=$S"),
-                (in	t) os.options[OPTION_USE_WEATHER],
+                (int) os.options[OPTION_USE_WEATHER],
                 ADDR_NVM_LOCATION,
-				        ADDR_NVM_DSWEATHER_KEY,
+                ADDR_NVM_DSWEATHER_KEY,
                 (int)os.options[OPTION_FW_VERSION],
                 tmp);
   // copy string to tmp_buffer, replacing all spaces with _

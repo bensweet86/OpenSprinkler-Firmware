@@ -106,19 +106,19 @@ typedef unsigned long ulong;
 /** 2KB NVM (ATmega644) data structure:
   * |         |     |  ---STRING PARAMETERS---        |           |   ----STATION ATTRIBUTES-----      |          |
   * | PROGRAM | CON | PWD | LOC | JURL | WURL | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (956)  |(12) |(36) |(48) | (40) | (40) | (34)  |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
+  * |  (976)  |(12) |(36) |(48) | (40) | (40) | (34)  |   (768)   | (6) | (6) |  (6) | (6) | (6) | (6) |  (58)    |
   * |         |     |     |     |      |      |       |           |     |     |      |     |     |     |          |
-  * 0        956  968   1004  1052  1092   1132    1166        1934  1940  1946   1952  1958  1964  1970      2028
+  * 0        976  988   10@4  1072  1112   1152    1186        1954  1960  1966   1972  1978  1984  1990      2048
   */
 
 /** 4KB NVM (ATmega1284) data structure:
   * |         |     |  ---STRING PARAMETERS---         |           |   ----STATION ATTRIBUTES-----      |          |
   * | PROGRAM | CON | PWD | LOC | JURL | WURL |  DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (2403) |(12) |(36) |(48) | (48) | (48) |  (34)  |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
+  * |  (2423) |(12) |(36) |(48) | (48) | (48) |  (34)  |   (1344)  | (7) | (7) |  (7) | (7) | (7) | (7) |   (61)   |
   * |         |     |     |     |      |      |        |           |     |     |      |     |     |     |          |
-  * 0       2403  2415   2451  2499  2547   2595    2629        3973  3080  3087   3094  4001  4008  4015      4086
+  * 0       2423  2435   2471  2519  2567   2615    2649        3993  4000  4007   4014  4021  4028  4035      4096
   */
-  
+
   #if defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__) // for 4KB NVM
 
     #define MAX_EXT_BOARDS    6  // maximum number of exp. boards (each expands 8 stations)
@@ -127,7 +127,7 @@ typedef unsigned long ulong;
     #define NVM_SIZE            4096  // For AVR, nvm data is stored in EEPROM, ATmega1284 has 4K EEPROM
     #define STATION_NAME_SIZE   24    // maximum number of characters in each station name
 
-    #define MAX_PROGRAMDATA     2403  // program data
+    #define MAX_PROGRAMDATA     2423  // program data
     #define MAX_NVCONDATA       12    // non-volatile controller data
     #define MAX_USER_PASSWORD   36    // user password
     #define MAX_LOCATION        48    // location string
@@ -143,12 +143,12 @@ typedef unsigned long ulong;
     #define NVM_SIZE            2048  // For AVR, nvm data is stored in EEPROM, ATmega644 has 2K EEPROM
     #define STATION_NAME_SIZE   16    // maximum number of characters in each station name
 
-    #define MAX_PROGRAMDATA     956   // program data
+    #define MAX_PROGRAMDATA     976   // program data
     #define MAX_NVCONDATA       12     // non-volatile controller data
     #define MAX_USER_PASSWORD   36    // user password
     #define MAX_LOCATION        48    // location string
     #define MAX_JAVASCRIPTURL   40    // javascript url
-    #define MAX_WEATHERURL      20    // weather script url
+    #define MAX_WEATHERURL      40    // weather script url
 	  #define MAX_DSWEATHER_KEY   34    // dark sky api key
 
   #endif
@@ -158,9 +158,9 @@ typedef unsigned long ulong;
 /** 8KB NVM (RPI/BBB/LINUX/ESP8266) data structure:
   * |         |     |  ---STRING PARAMETERS---        |           |   ----STATION ATTRIBUTES-----      |          |
   * | PROGRAM | CON | PWD | LOC | JURL | WURL | DSKEY | STN_NAMES | MAS | IGR | MAS2 | DIS | SEQ | SPE | OPTIONS  |
-  * |  (6127) |(12) |(36) |(48) | (48) | (48) | (34)  |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
+  * |  (6117) |(12) |(36) |(48) | (48) | (48) | (34)  |   (1728)  | (9) | (9) |  (9) | (9) | (9) | (9) |   (67)   |
   * |         |     |     |     |      |      |       |           |     |     |      |     |     |     |          |
-  * 0       6097  6109   6145  6193  6241   6289   6323        8051  8060  8069   8078  8087  8096  8105      8172
+  * 0       6117  6129   6165  6213  6261   6309   6343        8071  8080  8089   8098  8107  8116  8125      8192
   */
 
   // These are kept the same as AVR for compatibility reasons
@@ -173,7 +173,7 @@ typedef unsigned long ulong;
   #define NVM_SIZE            8192
   #define STATION_NAME_SIZE   24    // maximum number of characters in each station name
 
-  #define MAX_PROGRAMDATA     6097  // program data
+  #define MAX_PROGRAMDATA     6117  // program data
   #define MAX_NVCONDATA       12     // non-volatile controller data
   #define MAX_USER_PASSWORD   36    // user password
   #define MAX_LOCATION        48    // location string
