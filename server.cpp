@@ -25,6 +25,7 @@
 #include "program.h"
 #include "server.h"
 #include "weather.h"
+#include "mqtt.h"
 
 // External variables defined in main ion file
 #if defined(ARDUINO)
@@ -971,8 +972,8 @@ void server_json_options_main() {
 				continue;
 		#endif
 		
-		#if !defined(ESP8266)
-		// so far only OS3.x has sensor2
+		#if !(defined(ESP8266) || defined(PIN_SENSOR2))
+		// only OS 3.x or controllers that have PIN_SENSOR2 defined support sensor 2 options
 		if (oid==IOPT_SENSOR2_TYPE || oid==IOPT_SENSOR2_OPTION || oid==IOPT_SENSOR2_ON_DELAY || oid==IOPT_SENSOR2_OFF_DELAY)
 			continue;
 		#endif
@@ -1132,13 +1133,14 @@ void server_json_controller_main() {
 	bfill.emit_p(PSTR("\"RSSI\":$D,"), (int16_t)WiFi.RSSI());
 #endif
 
-	bfill.emit_p(PSTR("\"loc\":\"$O\",\"jsp\":\"$O\",\"wsp\":\"$O\",\"wto\":{$O},\"dskey\":\"$O\",\"ifkey\":\"$O\",\"wtdata\":$S,\"wterr\":$D,"),
+	bfill.emit_p(PSTR("\"loc\":\"$O\",\"jsp\":\"$O\",\"wsp\":\"$O\",\"wto\":{$O},\"dskey\":\"$O\",\"ifkey\":\"$O\",\"mqtt\":{$O},\"wtdata\":$S,\"wterr\":$D,"),
 							 SOPT_LOCATION,
 							 SOPT_JAVASCRIPTURL,
 							 SOPT_WEATHERURL,
 							 SOPT_WEATHER_OPTS,
 							 SOPT_DSWEATHER_KEY,
 							 SOPT_IFTTT_KEY,
+							 SOPT_MQTT_OPTS,
 							 strlen(wt_rawData)==0?"{}":wt_rawData,
 							 wt_errCode);
 
@@ -1445,6 +1447,17 @@ void server_change_options()
 		os.sopt_save(SOPT_IFTTT_KEY, tmp_buffer);
 	}
 	
+	keyfound = 0;
+	if(findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("mqtt"), true, &keyfound)) {
+		urlDecode(tmp_buffer);
+		os.sopt_save(SOPT_MQTT_OPTS, tmp_buffer);
+		os.status.req_mqtt_restart = true;
+	} else if (keyfound) {
+		tmp_buffer[0]=0;
+		os.sopt_save(SOPT_MQTT_OPTS, tmp_buffer);
+		os.status.req_mqtt_restart = true;
+	}
+
 	/*
 	// wtkey is retired
 	if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("wtkey"), true, &keyfound)) {
@@ -1464,15 +1477,6 @@ void server_change_options()
 	} else if (keyfound) {
 		tmp_buffer[0]=0;
 		os.sopt_save(SOPT_BLYNK_TOKEN, tmp_buffer);
-	}
-
-	keyfound = 0;
-	if (findKeyVal(p, tmp_buffer, TMP_BUFFER_SIZE, PSTR("mqtt"), true, &keyfound)) {
-		urlDecode(tmp_buffer);
-		os.sopt_save(SOPT_MQTT_IP, tmp_buffer);
-	} else if (keyfound) {
-		tmp_buffer[0]=0;
-		os.sopt_save(SOPT_MQTT_IP, tmp_buffer);
 	}
 	*/
 
@@ -2316,5 +2320,3 @@ ulong getNtpTime()
 	return 0;
 }
 #endif
-
-

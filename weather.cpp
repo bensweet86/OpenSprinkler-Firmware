@@ -21,6 +21,7 @@
  * <http://www.gnu.org/licenses/>. 
  */
 
+#include <stdlib.h>
 #include "OpenSprinkler.h"
 #include "utils.h"
 #include "server.h"
@@ -183,4 +184,3 @@ void GetWeather() {
 		// if wt_errCode > 0, the call is successful but weather script may return error
 	}
 }
-
